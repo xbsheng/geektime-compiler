@@ -34,7 +34,7 @@ interface Token {
   text: string;
 }
 
-enum TokenType {
+export enum TokenType {
   Id = 'Id',
   IntLiteral = 'IntLiteral',
   GT = 'GT',
@@ -53,7 +53,7 @@ const isDigit = (ch: string) => /[0-9]/.test(ch);
 
 const scriptText1 = `   age   >=45`;
 
-const simpleLexer = (script: string) => {
+export const simpleLexer = (script: string) => {
   const tokens: Token[] = [];
   let state: DfaState = DfaState.Initial;
   let token: Token | null = null;
@@ -86,7 +86,7 @@ const simpleLexer = (script: string) => {
 
       // @ts-ignore
       case DfaState.Id:
-        if (isAlpha(ch) || isDigit(ch)) {
+        if (isAlpha(ch) || isDigit(ch) || ch === '_') {
           token!.text += ch;
         } else {
           initToken(ch);
@@ -122,6 +122,3 @@ const simpleLexer = (script: string) => {
 
   return tokens;
 };
-
-const res = simpleLexer(scriptText1);
-console.log('xbs', '09-25-10-19-06', res);
