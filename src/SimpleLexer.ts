@@ -1,7 +1,5 @@
 // https://time.geekbang.org/column/article/118378
 
-// age >= 45
-
 enum DfaState {
   /**
    * 初始状态
@@ -50,8 +48,6 @@ const isAlpha = (ch: string) => /[a-zA-Z]/.test(ch)
  * 是否为数字
  */
 const isDigit = (ch: string) => /[0-9]/.test(ch)
-
-const scriptText1 = `   age   >=45`
 
 export const simpleLexer = (script: string) => {
   const tokens: Token[] = []

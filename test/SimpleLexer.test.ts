@@ -10,9 +10,9 @@ describe('SimpleLexer 测试', () => {
     })
 
     test('单个数字', () => {
-      const script = '45'
+      const script = '35'
       expect(simpleLexer(script)).toEqual([
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
 
@@ -29,12 +29,12 @@ describe('SimpleLexer 测试', () => {
 
   // 组合测试用例
   describe('组合表达式测试', () => {
-    test('age >= 45', () => {
-      const script = 'age >= 45'
+    test('age >= 35', () => {
+      const script = 'age >= 35'
       expect(simpleLexer(script)).toEqual([
         { type: TokenType.Id, text: 'age' },
         { type: TokenType.GE, text: '>=' },
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
 
@@ -60,11 +60,11 @@ describe('SimpleLexer 测试', () => {
   // 复杂表达式测试
   describe('复杂表达式测试', () => {
     test('多个标识符和数字', () => {
-      const script = 'age >= 45 score > 100'
+      const script = 'age >= 35 score > 100'
       expect(simpleLexer(script)).toEqual([
         { type: TokenType.Id, text: 'age' },
         { type: TokenType.GE, text: '>=' },
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
         { type: TokenType.Id, text: 'score' },
         { type: TokenType.GT, text: '>' },
         { type: TokenType.IntLiteral, text: '100' },
@@ -83,11 +83,11 @@ describe('SimpleLexer 测试', () => {
     })
 
     test('数字开头的标识符', () => {
-      const script = 'age123 >= 45'
+      const script = 'age123 >= 35'
       expect(simpleLexer(script)).toEqual([
         { type: TokenType.Id, text: 'age123' },
         { type: TokenType.GE, text: '>=' },
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
   })
@@ -95,29 +95,29 @@ describe('SimpleLexer 测试', () => {
   // 空白字符处理测试
   describe('空白字符处理测试', () => {
     test('包含多个空格', () => {
-      const script = '  age   >=   45  '
+      const script = '  age   >=   35  '
       expect(simpleLexer(script)).toEqual([
         { type: TokenType.Id, text: 'age' },
         { type: TokenType.GE, text: '>=' },
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
 
     test('包含制表符', () => {
-      const script = '\tage\t>=\t45\t'
+      const script = '\tage\t>=\t35\t'
       expect(simpleLexer(script)).toEqual([
         { type: TokenType.Id, text: 'age' },
         { type: TokenType.GE, text: '>=' },
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
 
     test('包含换行符', () => {
-      const script = 'age\n>=\n45'
+      const script = 'age\n>=\n35'
       expect(simpleLexer(script)).toEqual([
         { type: TokenType.Id, text: 'age' },
         { type: TokenType.GE, text: '>=' },
-        { type: TokenType.IntLiteral, text: '45' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
   })
