@@ -8,8 +8,8 @@
     "test": "vitest",
     "lint": "eslint src --ext .js",
     "lint:fix": "eslint src --ext .js --fix",
-    "format": "prettier --write src/**/*.ts",
-    "format:check": "prettier --check src/**/*.ts",
+    "format": "prettier --write src/**/*.ts test/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts test/**/*.ts",
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "clean": "rm -rf dist"

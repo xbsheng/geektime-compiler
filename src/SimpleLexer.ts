@@ -30,8 +30,8 @@ enum DfaState {
 }
 
 interface Token {
-  type: TokenType;
-  text: string;
+  type: TokenType
+  text: string
 }
 
 export enum TokenType {
@@ -44,81 +44,81 @@ export enum TokenType {
 /**
  * 是否为字母
  */
-const isAlpha = (ch: string) => /[a-zA-Z]/.test(ch);
+const isAlpha = (ch: string) => /[a-zA-Z]/.test(ch)
 
 /**
  * 是否为数字
  */
-const isDigit = (ch: string) => /[0-9]/.test(ch);
+const isDigit = (ch: string) => /[0-9]/.test(ch)
 
-const scriptText1 = `   age   >=45`;
+const scriptText1 = `   age   >=45`
 
 export const simpleLexer = (script: string) => {
-  const tokens: Token[] = [];
-  let state: DfaState = DfaState.Initial;
-  let token: Token | null = null;
+  const tokens: Token[] = []
+  let state: DfaState = DfaState.Initial
+  let token: Token | null = null
 
   const initToken = (ch: string) => {
     if (isAlpha(ch)) {
-      state = DfaState.Id;
-      token = { type: TokenType.Id, text: ch };
-      tokens.push(token);
+      state = DfaState.Id
+      token = { type: TokenType.Id, text: ch }
+      tokens.push(token)
     } else if (isDigit(ch)) {
-      state = DfaState.IntLiteral;
-      token = { type: TokenType.IntLiteral, text: ch };
-      tokens.push(token);
+      state = DfaState.IntLiteral
+      token = { type: TokenType.IntLiteral, text: ch }
+      tokens.push(token)
     } else if (ch === '>') {
-      state = DfaState.GT;
-      token = { type: TokenType.GT, text: ch };
-      tokens.push(token);
+      state = DfaState.GT
+      token = { type: TokenType.GT, text: ch }
+      tokens.push(token)
     } else {
-      state = DfaState.Initial;
+      state = DfaState.Initial
     }
-  };
+  }
 
   for (let i = 0; i < script.length; i++) {
-    const ch = script[i]!;
+    const ch = script[i]!
 
     switch (state) {
       case DfaState.Initial:
-        initToken(ch);
-        break;
+        initToken(ch)
+        break
 
       // @ts-ignore
       case DfaState.Id:
         if (isAlpha(ch) || isDigit(ch) || ch === '_') {
-          token!.text += ch;
+          token!.text += ch
         } else {
-          initToken(ch);
+          initToken(ch)
         }
-        break;
+        break
 
       // @ts-ignore
       case DfaState.IntLiteral:
         if (isDigit(ch)) {
-          token!.text += ch;
+          token!.text += ch
         } else {
-          initToken(ch);
+          initToken(ch)
         }
-        break;
+        break
 
       // @ts-ignore
       case DfaState.GT:
         if (ch === '=') {
-          state = DfaState.GE;
-          token!.text += ch;
-          token!.type = TokenType.GE;
+          state = DfaState.GE
+          token!.text += ch
+          token!.type = TokenType.GE
         } else {
-          initToken(ch);
+          initToken(ch)
         }
-        break;
+        break
 
       // @ts-ignore
       case DfaState.GE:
-        initToken(ch);
-        break;
+        initToken(ch)
+        break
     }
   }
 
-  return tokens;
-};
+  return tokens
+}
