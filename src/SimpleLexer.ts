@@ -11,6 +11,10 @@ enum DfaState {
    */
   Id,
 
+  ID_int1,
+  ID_int2,
+  ID_int3,
+
   /**
    * 数字字面量
    */
@@ -25,6 +29,10 @@ enum DfaState {
    * 大于等于
    */
   GE,
+
+  Assignment,
+
+  EQ,
 }
 
 interface Token {
@@ -34,9 +42,12 @@ interface Token {
 
 export enum TokenType {
   Id = 'Id',
+  Int = 'Int',
   IntLiteral = 'IntLiteral',
   GT = 'GT',
   GE = 'GE',
+  Assignment = 'Assignment',
+  EQ = 'EQ',
 }
 
 /**
@@ -56,9 +67,15 @@ export const simpleLexer = (script: string) => {
 
   const initToken = (ch: string) => {
     if (isAlpha(ch)) {
-      state = DfaState.Id
-      token = { type: TokenType.Id, text: ch }
-      tokens.push(token)
+      if (ch === 'i') {
+        state = DfaState.ID_int1
+        token = { type: TokenType.Int, text: ch }
+        tokens.push(token)
+      } else {
+        state = DfaState.Id
+        token = { type: TokenType.Id, text: ch }
+        tokens.push(token)
+      }
     } else if (isDigit(ch)) {
       state = DfaState.IntLiteral
       token = { type: TokenType.IntLiteral, text: ch }
@@ -66,6 +83,10 @@ export const simpleLexer = (script: string) => {
     } else if (ch === '>') {
       state = DfaState.GT
       token = { type: TokenType.GT, text: ch }
+      tokens.push(token)
+    } else if (ch === '=') {
+      state = DfaState.Assignment
+      token = { type: TokenType.Assignment, text: ch }
       tokens.push(token)
     } else {
       state = DfaState.Initial
@@ -86,6 +107,41 @@ export const simpleLexer = (script: string) => {
           token!.text += ch
         } else {
           initToken(ch)
+        }
+        break
+
+      // @ts-ignore
+      case DfaState.ID_int1:
+        if (ch === 'n') {
+          token!.text += ch
+          state = DfaState.ID_int2
+        } else {
+          token!.type = TokenType.Id
+          token!.text += ch
+          state = DfaState.Id
+        }
+        break
+
+      // @ts-ignore
+      case DfaState.ID_int2:
+        if (ch === 't') {
+          token!.text += ch
+          state = DfaState.ID_int3
+        } else {
+          token!.type = TokenType.Id
+          token!.text += ch
+          state = DfaState.Id
+        }
+        break
+
+      // @ts-ignore
+      case DfaState.ID_int3:
+        if (ch === ' ') {
+          state = DfaState.Initial
+        } else {
+          token!.type = TokenType.Id
+          token!.text += ch
+          state = DfaState.Id
         }
         break
 
@@ -111,6 +167,22 @@ export const simpleLexer = (script: string) => {
 
       // @ts-ignore
       case DfaState.GE:
+        initToken(ch)
+        break
+
+      // @ts-ignore
+      case DfaState.Assignment:
+        if (ch === '=') {
+          state = DfaState.EQ
+          token!.text += ch
+          token!.type = TokenType.EQ
+        } else {
+          initToken(ch)
+        }
+        break
+
+      // @ts-ignore
+      case DfaState.EQ:
         initToken(ch)
         break
     }

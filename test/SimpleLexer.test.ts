@@ -152,6 +152,104 @@ describe('SimpleLexer 测试', () => {
     })
   })
 
+  // 整数测试用例
+  describe('整数处理测试', () => {
+    test('零值', () => {
+      const script = '0'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '0' },
+      ])
+    })
+
+    test('单位数', () => {
+      const script = '5'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '5' },
+      ])
+    })
+
+    test('多位数', () => {
+      const script = '123'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '123' },
+      ])
+    })
+
+    test('大整数', () => {
+      const script = '999999'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '999999' },
+      ])
+    })
+
+    test('以零开头的数字', () => {
+      const script = '007'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '007' },
+      ])
+    })
+
+    test('多个连续数字', () => {
+      const script = '123 456 789'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '123' },
+        { type: TokenType.IntLiteral, text: '456' },
+        { type: TokenType.IntLiteral, text: '789' },
+      ])
+    })
+
+    test('数字与标识符混合', () => {
+      const script = 'age123 456'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'age123' },
+        { type: TokenType.IntLiteral, text: '456' },
+      ])
+    })
+
+    test('数字与操作符组合', () => {
+      const script = '100 > 50 >= 25'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '100' },
+        { type: TokenType.GT, text: '>' },
+        { type: TokenType.IntLiteral, text: '50' },
+        { type: TokenType.GE, text: '>=' },
+        { type: TokenType.IntLiteral, text: '25' },
+      ])
+    })
+
+    test('长数字字符串', () => {
+      const script = '12345678901234567890'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '12345678901234567890' },
+      ])
+    })
+
+    test('数字前后有空白字符', () => {
+      const script = '  123  '
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '123' },
+      ])
+    })
+
+    test('数字与换行符', () => {
+      const script = '123\n456\n789'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '123' },
+        { type: TokenType.IntLiteral, text: '456' },
+        { type: TokenType.IntLiteral, text: '789' },
+      ])
+    })
+
+    test('数字与制表符', () => {
+      const script = '123\t456\t789'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '123' },
+        { type: TokenType.IntLiteral, text: '456' },
+        { type: TokenType.IntLiteral, text: '789' },
+      ])
+    })
+  })
+
   // 特殊字符测试
   describe('特殊字符处理测试', () => {
     test('包含下划线的标识符', () => {
@@ -160,6 +258,38 @@ describe('SimpleLexer 测试', () => {
         { type: TokenType.Id, text: 'user_name' },
         { type: TokenType.GE, text: '>=' },
         { type: TokenType.IntLiteral, text: '0' },
+      ])
+    })
+  })
+
+  // 变量声明测试
+  describe('变量声明测试', () => {
+    test('int age = 35', () => {
+      const script = 'int age = 35'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Int, text: 'int' },
+        { type: TokenType.Id, text: 'age' },
+        { type: TokenType.Assignment, text: '=' },
+        { type: TokenType.IntLiteral, text: '35' },
+      ])
+    })
+
+    test('int age222 = 35', () => {
+      const script = 'int age222 = 35'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Int, text: 'int' },
+        { type: TokenType.Id, text: 'age222' },
+        { type: TokenType.Assignment, text: '=' },
+        { type: TokenType.IntLiteral, text: '35' },
+      ])
+    })
+
+    test('age == 35', () => {
+      const script = 'age == 35'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'age' },
+        { type: TokenType.EQ, text: '==' },
+        { type: TokenType.IntLiteral, text: '35' },
       ])
     })
   })
