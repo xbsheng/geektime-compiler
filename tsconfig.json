@@ -7,9 +7,10 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
+    "module": "ESNext",
+    "target": "ESNext",
     "types": ["vitest/globals"],
+    "moduleResolution": "bundler",
 
     // Other Outputs
     "declaration": true,
