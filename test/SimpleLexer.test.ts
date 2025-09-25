@@ -293,4 +293,163 @@ describe('SimpleLexer 测试', () => {
       ])
     })
   })
+
+  // 算术运算符测试
+  describe('算术运算符测试', () => {
+    test('单个加号', () => {
+      const script = '+'
+      expect(simpleLexer(script)).toEqual([{ type: TokenType.Plus, text: '+' }])
+    })
+
+    test('单个减号', () => {
+      const script = '-'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Minus, text: '-' },
+      ])
+    })
+
+    test('单个乘号', () => {
+      const script = '*'
+      expect(simpleLexer(script)).toEqual([{ type: TokenType.Star, text: '*' }])
+    })
+
+    test('单个除号', () => {
+      const script = '/'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Slash, text: '/' },
+      ])
+    })
+
+    test('加法表达式', () => {
+      const script = 'a + b'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Plus, text: '+' },
+        { type: TokenType.Id, text: 'b' },
+      ])
+    })
+
+    test('减法表达式', () => {
+      const script = 'a - b'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Minus, text: '-' },
+        { type: TokenType.Id, text: 'b' },
+      ])
+    })
+
+    test('乘法表达式', () => {
+      const script = 'a * b'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Star, text: '*' },
+        { type: TokenType.Id, text: 'b' },
+      ])
+    })
+
+    test('除法表达式', () => {
+      const script = 'a / b'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Slash, text: '/' },
+        { type: TokenType.Id, text: 'b' },
+      ])
+    })
+
+    test('数字加法', () => {
+      const script = '10 + 20'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '10' },
+        { type: TokenType.Plus, text: '+' },
+        { type: TokenType.IntLiteral, text: '20' },
+      ])
+    })
+
+    test('数字减法', () => {
+      const script = '100 - 50'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '100' },
+        { type: TokenType.Minus, text: '-' },
+        { type: TokenType.IntLiteral, text: '50' },
+      ])
+    })
+
+    test('数字乘法', () => {
+      const script = '5 * 6'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '5' },
+        { type: TokenType.Star, text: '*' },
+        { type: TokenType.IntLiteral, text: '6' },
+      ])
+    })
+
+    test('数字除法', () => {
+      const script = '15 / 3'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.IntLiteral, text: '15' },
+        { type: TokenType.Slash, text: '/' },
+        { type: TokenType.IntLiteral, text: '3' },
+      ])
+    })
+
+    test('复杂算术表达式', () => {
+      const script = 'a + b * c - d / e'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Plus, text: '+' },
+        { type: TokenType.Id, text: 'b' },
+        { type: TokenType.Star, text: '*' },
+        { type: TokenType.Id, text: 'c' },
+        { type: TokenType.Minus, text: '-' },
+        { type: TokenType.Id, text: 'd' },
+        { type: TokenType.Slash, text: '/' },
+        { type: TokenType.Id, text: 'e' },
+      ])
+    })
+
+    test('混合数字和变量', () => {
+      const script = 'x + 10 - y * 5'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'x' },
+        { type: TokenType.Plus, text: '+' },
+        { type: TokenType.IntLiteral, text: '10' },
+        { type: TokenType.Minus, text: '-' },
+        { type: TokenType.Id, text: 'y' },
+        { type: TokenType.Star, text: '*' },
+        { type: TokenType.IntLiteral, text: '5' },
+      ])
+    })
+
+    test('包含空格的算术表达式', () => {
+      const script = '  a  +  b  *  c  '
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Plus, text: '+' },
+        { type: TokenType.Id, text: 'b' },
+        { type: TokenType.Star, text: '*' },
+        { type: TokenType.Id, text: 'c' },
+      ])
+    })
+
+    test('连续运算符', () => {
+      const script = 'a + - b'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Plus, text: '+' },
+        { type: TokenType.Minus, text: '-' },
+        { type: TokenType.Id, text: 'b' },
+      ])
+    })
+
+    test('除法与比较运算符', () => {
+      const script = 'a / b >= c'
+      expect(simpleLexer(script)).toEqual([
+        { type: TokenType.Id, text: 'a' },
+        { type: TokenType.Slash, text: '/' },
+        { type: TokenType.Id, text: 'b' },
+        { type: TokenType.GE, text: '>=' },
+        { type: TokenType.Id, text: 'c' },
+      ])
+    })
+  })
 })
